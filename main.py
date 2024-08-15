@@ -5,8 +5,8 @@ import requests
 import zipfile
 import io
 
-GITHUB_REPO = "AlanNoStealinglol/Darius-Nuker"  # Replace with your GitHub username/repo
-VERSION = "1.0.0"  # Current version of the script
+GITHUB_REPO = "AlanNoStealinglol/Darius-Nuker"  # GitHub username/repo
+VERSION = "1.0.1"  # Current version of the script
 
 def gradient_text(text, start_color, end_color, steps):
     """Generate a gradient effect from start_color to end_color"""
@@ -18,8 +18,8 @@ def gradient_text(text, start_color, end_color, steps):
         """Convert RGB color to ANSI escape code"""
         return f"\033[38;2;{rgb[0]};{rgb[1]};{rgb[2]}m"
 
-    start_rgb = [0, 0, 255] if start_color == 'blue' else [255, 255, 255]
-    end_rgb = [255, 255, 255] if end_color == 'white' else [0, 0, 255]
+    start_rgb = [0, 128, 0] if start_color == 'green' else [255, 255, 255]
+    end_rgb = [255, 255, 255] if end_color == 'white' else [0, 128, 0]
 
     gradient = []
     for step in range(steps):
@@ -31,8 +31,6 @@ def gradient_text(text, start_color, end_color, steps):
 
 def banner():
     """Handler for non-unicode consoles with a blue-to-white gradient"""
-    reset = '\033[0m'  # ANSI code to reset color
-
     shadow = '''\
  _____             _          __ ____ ______ ___   ___  __  ___    _   _       _                ____        
 |  __ \\           (_)        /_ |___ \\____  / _ \\ / _ \\_  |/ _ \\  | \\ | |     | |              / __ \\       
@@ -44,7 +42,6 @@ def banner():
                                                                                                       |_|     
     '''
     
-    # Add a border around the banner
     banner_width = len(max(shadow.splitlines(), key=len)) + 4
     print(gradient_text('╭' + '─' * (banner_width - 2) + '╮', 'blue', 'white', 10))
     for line in shadow.splitlines():
@@ -79,9 +76,6 @@ def download_and_replace_script(zip_url):
 
 def print_menu(options, selected_index):
     """Prints the menu options with the current selection highlighted and a blue outline"""
-    blue = '94'  # Light blue text
-    border_blue = '1;34'  # Bold blue border
-    
     os.system('cls' if os.name == 'nt' else 'clear')  # Clear the console for a fresh display
     banner()
     
@@ -100,11 +94,27 @@ def print_menu(options, selected_index):
             print(gradient_text(f"│    [{key}] {description.ljust(menu_width - 4)} │", 'blue', 'white', 10))
     print(gradient_text('╰' + '─' * (menu_width + 4) + '╯', 'blue', 'white', 10))
 
+def show_credits():
+    """Display the credits with a green-to-white gradient"""
+    credits = '''\
+  _____                _           _   ____                   _             
+ / ____|              | |         | | |  _ \\            /\\   | |            
+| |     _ __ ___  __ _| |_ ___  __| | | |_) |_   _     /  \\  | | __ _ _ __  
+| |    | '__/ _ \\/ _` | __/ _ \\/ _` | |  _ <| | | |   / /\\ \\ | |/ _` | '_ \\ 
+| |____| | |  __/ (_| | ||  __/ (_| | | |_) | |_| |  / ____ \\| | (_| | | | |
+ \\_____|_|  \\___|\\__,_|\\__\\___|\\__,_| |____/ \\__, | /_/    \\_\\_|\\__,_|_| |_|
+                                              __/ |                         
+                                             |___/                         
+    '''
+    print(gradient_text(credits, 'green', 'white', 20))
+    input("\nPress Enter to return to the main menu...")
+
 def main_menu():
     options = {
         '1': "Nuke",
         '2': "Stealer Builders",
-        '3': "Exit"
+        '3': "Credits",
+        '4': "Exit"
     }
     selected_index = 0
 
@@ -119,10 +129,12 @@ def main_menu():
             print("Opening Stealer Builders...")  # Displaying a message before running Builder.py
             os.system('python Builder.py')  # Runs Builder.py using the system's Python interpreter
         elif choice == '3':
+            show_credits()  # Display the credits
+        elif choice == '4':
             print("Exiting...")
             sys.exit(0)  # Exit the program
         else:
-            print("Invalid choice, please select 1, 2, or 3.")
+            print("Invalid choice, please select 1, 2, 3, or 4.")
             time.sleep(1)  # Pause to allow user to see the message
 
 if __name__ == "__main__":
