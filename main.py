@@ -1,6 +1,12 @@
 import sys
 import os
 import time
+import requests
+import zipfile
+import io
+
+GITHUB_REPO = "AlanNoStealinglol/Darius-Nuker"  # Replace with your GitHub username/repo
+VERSION = "1.0.0"  # Current version of the script
 
 def gradient_text(text, start_color, end_color, steps):
     """Generate a gradient effect from start_color to end_color"""
@@ -44,6 +50,32 @@ def banner():
     for line in shadow.splitlines():
         print(gradient_text(f"│ {line.ljust(banner_width - 4)} │", 'blue', 'white', 10))
     print(gradient_text('╰' + '─' * (banner_width - 2) + '╯', 'blue', 'white', 10))
+
+def check_for_updates():
+    """Check GitHub for a new release and update if available"""
+    print("Checking for updates...")
+    try:
+        response = requests.get(f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest")
+        latest_release = response.json()
+        latest_version = latest_release['tag_name']
+
+        if latest_version != VERSION:
+            print(f"New version available: {latest_version}. Downloading update...")
+            download_and_replace_script(latest_release['zipball_url'])
+            print("Update complete. Restarting...")
+            sys.exit(0)
+        else:
+            print("No new updates found. Proceeding with the current version.")
+    except Exception as e:
+        print(f"Failed to check for updates: {e}. Proceeding with the current version.")
+
+def download_and_replace_script(zip_url):
+    """Download and replace the script with the latest version from GitHub"""
+    response = requests.get(zip_url)
+    zip_data = zipfile.ZipFile(io.BytesIO(response.content))
+    
+    # Extract the contents of the zip file to the current directory
+    zip_data.extractall()
 
 def print_menu(options, selected_index):
     """Prints the menu options with the current selection highlighted and a blue outline"""
@@ -94,4 +126,5 @@ def main_menu():
             time.sleep(1)  # Pause to allow user to see the message
 
 if __name__ == "__main__":
+    check_for_updates()  # Check for updates before launching the menu
     main_menu()
