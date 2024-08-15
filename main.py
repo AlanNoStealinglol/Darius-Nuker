@@ -18,8 +18,8 @@ def gradient_text(text, start_color, end_color, steps):
         """Convert RGB color to ANSI escape code"""
         return f"\033[38;2;{rgb[0]};{rgb[1]};{rgb[2]}m"
 
-    start_rgb = [0, 128, 0] if start_color == 'green' else [255, 255, 255]
-    end_rgb = [255, 255, 255] if end_color == 'white' else [0, 128, 0]
+    start_rgb = [0, 128, 0] if start_color == 'green' else [0, 0, 255] if start_color == 'blue' else [255, 255, 255]
+    end_rgb = [255, 255, 255] if end_color == 'white' else [0, 128, 0] if end_color == 'green' else [0, 0, 255]
 
     gradient = []
     for step in range(steps):
